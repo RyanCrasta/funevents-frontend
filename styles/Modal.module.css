@@ -1,0 +1,36 @@
+.modal {
+  background: white;
+  width: 500px;
+  height: 300px;
+  border-radius: 15px;
+  padding: 20px;
+  z-index: 100;
+  position: absolute;
+  top: 50%;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 25px;
+}
+
+.body {
+  padding-top: 10px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 150%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.overflowHidden {
+  overflow: hidden;
+}
