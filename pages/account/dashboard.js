@@ -26,7 +26,6 @@ export default function DashboardPage({ events, token, show }) {
       if (!res.ok) {
         toast.error(data.message);
       } else {
-        // toast('Event Deleted');
         router.push('/');
       }
     }
@@ -62,20 +61,20 @@ export async function getServerSideProps(context) {
 
   const events = await res.json();
 
-  const userRes = await fetch(`${API_URL}/api/users/me`, {
+  const userResponse = await fetch(`${API_URL}/api/users/me`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${context.req.cookies.token}`,
     },
   });
 
-  const events1 = await userRes.json();
+  const userData = await userResponse.json();
 
   return {
     props: {
       events,
       token: context.req.cookies.token,
-      show: !events1.isAdmin,
+      show: !userData.isAdmin,
     },
   };
 }

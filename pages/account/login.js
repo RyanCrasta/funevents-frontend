@@ -6,12 +6,16 @@ import { useContext, useEffect, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import Link from 'next/link';
 import AuthContext from '@/context/AuthContext';
+import NotFoundPage from '../404';
+import { useRouter } from 'next/router';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { login, error, setError } = useContext(AuthContext);
+  const router = useRouter();
+
+  const { login, error, setError, user } = useContext(AuthContext);
 
   useEffect(() => {
     if (error && error.message) {
@@ -20,13 +24,20 @@ export default function LoginPage() {
     }
   }, [error]);
 
+  useEffect(() => {
+    if(user){
+      router.push('/account/dashboard')
+    }
+  })
+
   const handleSubmit = (e) => {
     e.preventDefault();
     login({ email, password });
   };
 
   return (
-    <Layout title='User Login'>
+     
+        <Layout title='User Login'>
       <div className={styles.auth}>
         <h1>
           <FaUser /> Log In
@@ -64,5 +75,8 @@ export default function LoginPage() {
         </p>
       </div>
     </Layout>
+      
   );
 }
+
+

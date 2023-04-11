@@ -37,16 +37,16 @@ export default function EventPage({ evt, img }) {
 
 export async function getServerSideProps(context) {
   // check if ADMIN
-  const userRes = await fetch(`${API_URL}/api/users/me`, {
+  const userResponse = await fetch(`${API_URL}/api/users/me`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${context.req.cookies.token}`,
     },
   });
 
-  const events1 = await userRes.json();
+  const userData = await userResponse.json();
 
-  if (events1.isAdmin) {
+  if (userData.isAdmin) {
     const res = await fetch(
       `${API_URL}/api/events?filters[slug]=${context.query.slug}&populate=*`,
       {
@@ -66,7 +66,7 @@ export async function getServerSideProps(context) {
   }
 
   const res = await fetch(
-    `${API_URL}/api/myevents?filters[slug]=${context.query.slug}&populate=*`,
+    `${API_URL}/api/myevents`,
     {
       headers: {
         Authorization: `Bearer ${context.req.cookies.token}`,

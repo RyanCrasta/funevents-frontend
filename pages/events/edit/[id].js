@@ -1,7 +1,6 @@
 import Modal from '@/components/Modal';
 import Layout from '@/components/Layout';
-import Link from 'next/link';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styles from '../../../styles/Form.module.css';
@@ -12,8 +11,9 @@ import moment from 'moment';
 import Image from 'next/image';
 import { FaImage } from 'react-icons/fa';
 import ImageUpload from '@/components/ImageUpload';
+import NotFoundPage from '@/pages/404';
 
-export default function EditEventPage({ evt, id, token }) {
+export default function EditEventPage({ evt, id, token, show }) {
   const [values, setValues] = useState({
     name: evt?.name,
     performers: evt?.performers,
@@ -28,7 +28,7 @@ export default function EditEventPage({ evt, id, token }) {
   const [showModal, setShowModal] = useState(false);
 
   const [imagePreview, setImagePreview] = useState(
-    evt.image?.data?.attributes?.formats?.thumbnail.url
+    evt?.image?.data?.attributes?.formats?.thumbnail.url
       ? evt.image.data.attributes.formats.thumbnail.url
       : null
   );
@@ -88,7 +88,8 @@ export default function EditEventPage({ evt, id, token }) {
   };
 
   return (
-    <Layout title='Edit Event'>
+    show ? <NotFoundPage /> : (
+      <Layout title='Edit Event'>
       <h1>Edit event page</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
@@ -198,6 +199,7 @@ export default function EditEventPage({ evt, id, token }) {
         />
       </Modal>
     </Layout>
+    )
   );
 }
 
@@ -213,12 +215,29 @@ export async function getServerSideProps(context) {
   const res = await data.json();
 
   // we can parse it we can send it on Authorization header
+  const userResponse = await fetch(`${API_URL}/api/users/me`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${context.req.cookies.token}`,
+    },
+  });
+
+  const userData = await userResponse.json();
+
+  if(userData.isAdmin){
+    return {
+      props: {
+        show: userData.isAdmin,
+      }
+    }
+  }
 
   return {
     props: {
       evt: res.data?.attributes,
       id: res.data?.id,
       token: context.req.cookies.token,
+      show: userData.isAdmin,
     },
   };
 }

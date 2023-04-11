@@ -20,7 +20,7 @@ export default async (req, res) => {
     const data = await strapiResponse.json();
 
     if (strapiResponse.ok) {
-      // set cookie on server side, save jwt
+      // set cookie using server side code, save jwt
       res.setHeader(
         'Set-Cookie',
         cookie.serialize('token', data.jwt, {
