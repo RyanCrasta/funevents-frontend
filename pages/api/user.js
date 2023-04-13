@@ -4,6 +4,7 @@ import cookie from 'cookie';
 export default async (req, res) => {
   if (req.method === 'GET') {
     if (!req.headers.cookie) {
+      // 403 Forbidden
       res.status(403).json({ message: 'Not Authorized' });
       return;
     }

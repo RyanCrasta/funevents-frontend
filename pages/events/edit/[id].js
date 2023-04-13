@@ -94,7 +94,7 @@ export default function EditEventPage({ evt, id, token, show }) {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
           <div>
-            <label htmlFor='name'>Event Name</label>
+            <label htmlFor='name'>Movie Name</label>
             <input
               type='text'
               id='name'
@@ -223,6 +223,14 @@ export async function getServerSideProps(context) {
   });
 
   const userData = await userResponse.json();
+
+  if(userData.error && userData.error.status === 401){
+    return{
+      props: {
+        show: true
+      }
+    }
+  }
 
   if(userData.isAdmin){
     return {

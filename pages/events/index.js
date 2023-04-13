@@ -30,6 +30,7 @@ export async function getServerSideProps(context) {
       Authorization: `Bearer ${context.req.cookies.token}`,
     },
   });
+  
   const events = await res.json();
 
   return {

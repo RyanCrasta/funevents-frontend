@@ -19,6 +19,7 @@ export default function EventPage({ evt, img }) {
             src={img?.url ? img.url : '/images/event-default.png'}
             width={900}
             height={600}
+            alt='event-image'
           />
         </div>
 

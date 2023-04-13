@@ -9,6 +9,7 @@ export default function EventItem({ evt }) {
         <Image
           width={170}
           height={100}
+          alt='event-image'
           src={
             evt?.image?.data?.attributes?.url
               ? evt.image.data.attributes.url

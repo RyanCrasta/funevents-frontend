@@ -6,7 +6,6 @@ import { useContext, useState, useEffect } from 'react';
 import { FaUser } from 'react-icons/fa';
 import Link from 'next/link';
 import AuthContext from '@/context/AuthContext';
-import NotFoundPage from '../404';
 import { API_URL } from '@/config';
 
 export default function RegisterPage() {
@@ -15,7 +14,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const { register, error, setError, user } = useContext(AuthContext);
+  const { register, error, setError } = useContext(AuthContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -99,12 +98,10 @@ export default function RegisterPage() {
         </p>
       </div>
     </Layout>
-    
   );
 }
 
 export async function getServerSideProps(context) {
-
   const userResponse = await fetch(`${API_URL}/api/users/me`, {
     method: 'GET',
     headers: {
@@ -120,6 +117,10 @@ export async function getServerSideProps(context) {
         destination: '/',
         permanent: false,
       },
+    }
+  }else{
+    return{
+      props: {}
     }
   }
 }

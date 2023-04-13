@@ -1,6 +1,5 @@
 //! CLIENT SIDE AUTH
 import Layout from '@/components/Layout';
-import Link from 'next/link';
 import React, { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -14,7 +13,6 @@ import NotFoundPage from '../404';
 export default function AddEventPage({ token }) {
   const { user } = useContext(AuthContext);
   const router = useRouter();
-
   const [values, setValues] = useState({
     name: '',
     performers: '',
@@ -67,7 +65,7 @@ export default function AddEventPage({ token }) {
 
   return (
     <>
-      {user && user.isAdmin ? (
+      {(user && user.isAdmin) || (user === null) ? (
         <>
           <NotFoundPage />
         </>
@@ -77,7 +75,7 @@ export default function AddEventPage({ token }) {
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.grid}>
               <div>
-                <label htmlFor='name'>Event Name</label>
+                <label htmlFor='name'>Movie Name</label>
                 <input
                   type='text'
                   id='name'
@@ -167,7 +165,7 @@ export default function AddEventPage({ token }) {
 export async function getServerSideProps(context) {
   return {
     props: {
-      token: context.req.cookies.token,
+      token: context.req.cookies.token || '',
     },
   };
 }

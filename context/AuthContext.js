@@ -28,8 +28,7 @@ export const AuthProvider = ({ children }) => {
     if (res.ok) {
       setUser(data.user);
       setError(null);
-
-      router.push('/account/dashboard');
+      router.push('/');
     } else {
       setError({ message: data.message });
     }
@@ -53,11 +52,7 @@ export const AuthProvider = ({ children }) => {
     if (res.ok) {
       setUser(data.user);
       setError(null);
-      if (data.user.isAdmin) {
-        router.push('/events');
-      } else {
-        router.push('/account/dashboard');
-      }
+      router.push('/');
     } else {
       setError({ message: data.message });
     }

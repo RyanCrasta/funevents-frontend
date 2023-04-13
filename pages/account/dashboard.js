@@ -35,7 +35,7 @@ export default function DashboardPage({ events, token, show }) {
     <Layout title='User Dashboard'>
       <div className={styles.dash}>
         <h1>Dashboard</h1>
-        <h3>My Events</h3>
+        <h3>My Movie Events</h3>
 
         {events && events.length > 0 ? (
           events.map((evt) => (
@@ -69,6 +69,15 @@ export async function getServerSideProps(context) {
   });
 
   const userData = await userResponse.json();
+
+  // 401 Unauthorized
+  if(userData.error && userData.error.status === 401){
+    return {
+      props: {
+        show: false
+      }
+    }
+  }
 
   return {
     props: {
