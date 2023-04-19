@@ -3,11 +3,19 @@ import EventItem from '@/components/EventItem';
 import Layout from '@/components/Layout';
 import { API_URL } from '@/config';
 import AuthContext from '@/context/AuthContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import NotFoundPage from '../404';
+import { useRouter } from 'next/router';
 
 export default function EventsPage({ events }) {
   const { user } = useContext(AuthContext);
+  const router = useRouter();
+  
+  useEffect(() => {
+    if(!user){
+      router.push('/')
+    }
+  },[])
 
   return user && user.isAdmin ? (
     <Layout>

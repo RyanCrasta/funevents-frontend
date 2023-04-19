@@ -6,7 +6,6 @@ import { useContext, useEffect, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import Link from 'next/link';
 import AuthContext from '@/context/AuthContext';
-import NotFoundPage from '../404';
 import { useRouter } from 'next/router';
 
 export default function LoginPage() {
@@ -36,7 +35,6 @@ export default function LoginPage() {
   };
 
   return (
-     
         <Layout title='User Login'>
       <div className={styles.auth}>
         <h1>

@@ -39,7 +39,6 @@ export default function RegisterPage() {
   }, [error]);
 
   return (
-
       <Layout title='User Registration'>
       <div className={styles.auth}>
         <h1>

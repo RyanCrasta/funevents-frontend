@@ -13,23 +13,34 @@ import { FaImage } from 'react-icons/fa';
 import ImageUpload from '@/components/ImageUpload';
 import NotFoundPage from '@/pages/404';
 
-export default function EditEventPage({ evt, id, token, show }) {
+export default function EditEventPage({ 
+  token, 
+  show, 
+  id,
+  name,
+  venue,
+  address,
+  date,
+  time,
+  performers,
+  description,
+  image }) {
   const [values, setValues] = useState({
-    name: evt?.name,
-    performers: evt?.performers,
-    venue: evt?.venue,
-    address: evt?.address,
-    date: evt?.date,
-    time: evt?.time,
-    description: evt?.description,
-    image: evt?.image,
+    name: name,
+    performers: performers,
+    venue: venue,
+    address: address,
+    date: date,
+    time: time,
+    description: description,
+    image: image,
   });
 
   const [showModal, setShowModal] = useState(false);
 
   const [imagePreview, setImagePreview] = useState(
-    evt?.image?.data?.attributes?.formats?.thumbnail.url
-      ? evt.image.data.attributes.formats.thumbnail.url
+    image?.url
+      ? image.url
       : null
   );
 
@@ -204,16 +215,6 @@ export default function EditEventPage({ evt, id, token, show }) {
 }
 
 export async function getServerSideProps(context) {
-  const data = await fetch(
-    `${API_URL}/api/events/${context.query.id}?populate=*`,
-    {
-      headers: {
-        Authorization: `Bearer ${context.req.cookies.token}`,
-      },
-    }
-  );
-  const res = await data.json();
-
   // we can parse it we can send it on Authorization header
   const userResponse = await fetch(`${API_URL}/api/users/me`, {
     method: 'GET',
@@ -221,17 +222,17 @@ export async function getServerSideProps(context) {
       Authorization: `Bearer ${context.req.cookies.token}`,
     },
   });
-
+  
   const userData = await userResponse.json();
-
-  if(userData.error && userData.error.status === 401){
+  
+  if(userData?.error && userData?.error?.status === 401){
     return{
       props: {
         show: true
       }
     }
   }
-
+  
   if(userData.isAdmin){
     return {
       props: {
@@ -240,12 +241,46 @@ export async function getServerSideProps(context) {
     }
   }
 
-  return {
-    props: {
-      evt: res.data?.attributes,
-      id: res.data?.id,
-      token: context.req.cookies.token,
-      show: userData.isAdmin,
-    },
-  };
+  let dataEvent = [];
+  const myEventsRes = await fetch(
+    `${API_URL}/api/myevents`,
+    {
+      headers: {
+        Authorization: `Bearer ${context.req.cookies.token}`,
+      },
+    }
+  );
+  const myEventsData = await myEventsRes.json();
+
+  myEventsData.map((e) => {
+    if(e.id === Number(context.query.id)){
+      dataEvent.push(e);
+    }
+  })
+
+  if(dataEvent.length === 0){
+   return{
+    redirect: {
+      destination: '/events',
+      permanent: false,
+    }
+   }
+  }else{
+    const {id, name, venue, address, date, time, performers, description, image} = dataEvent[0];
+    return{
+      props:{
+        token: context.req.cookies.token,
+        show: userData.isAdmin,
+        id,
+        name,
+        venue,
+        address,
+        date,
+        time,
+        performers,
+        description,
+        image
+      }
+    }
+  }
 }

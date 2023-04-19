@@ -47,6 +47,16 @@ export async function getServerSideProps(context) {
 
   const userData = await userResponse.json();
 
+
+  if(userData?.error?.status === 401){
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
   if (userData.isAdmin) {
     const res = await fetch(
       `${API_URL}/api/events?filters[slug]=${context.query.slug}&populate=*`,
